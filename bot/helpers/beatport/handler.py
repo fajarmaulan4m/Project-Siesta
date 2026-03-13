@@ -41,7 +41,7 @@ from ...settings import bot_set
 import bot.helpers.translations as lang
 from bot.logger import LOGGER
 
-BEATPORT_SEMAPHORE = asyncio.Semaphore(2)
+BEATPORT_SEMAPHORE = asyncio.Semaphore(5)
 
 def make_progress_bar(current, total):
     if total == 0: return "▱" * 10
@@ -121,7 +121,7 @@ async def download_beatport_track(url: str, filepath: str, proxy: str = None):
 
 async def start_track(item_id: str, user: dict, track_meta: dict | None, upload=True, filepath=None, disable_link=False):
     async with BEATPORT_SEMAPHORE:
-        await asyncio.sleep(random.uniform(1.5, 3.5))
+        await asyncio.sleep(random.uniform(0.2, 0.5))
         user_id = user.get('user_id')
         client = beatport_manager.get_client(user_id)
         user_proxy = client.proxy if client else None
@@ -132,13 +132,7 @@ async def start_track(item_id: str, user: dict, track_meta: dict | None, upload=
                 LOGGER.warning(f"Beatport track {item_id} error: {e}")
                 return False
             filepath = f"{Config.DOWNLOAD_BASE_DIR}/{user['r_id']}/{track_meta['provider']}/{track_meta['albumartist']}/{track_meta['album']}"
-            filepath = sanitize_filepath(filepath)
-
-        try:
-            if client and random.random() < 0.7:
-                await asyncio.sleep(random.uniform(0.5, 1.5))
-        except Exception: 
-            pass 
+            filepath = sanitize_filepath(filepath) 
 
         if not track_meta.get('download_url'):
             new_url, qual = await refresh_track_url(item_id, track_meta, user_id)
@@ -197,7 +191,7 @@ async def start_album(album_id: str, user: dict, upload=True):
 
     for i, track in enumerate(album_meta['tracks']):
         if i > 0:
-            await asyncio.sleep(random.uniform(5, 10))
+            await asyncio.sleep(random.uniform(1.0, 2.0))
 
         success = await start_track(track['itemid'], user, track, False, album_folder)
         if success: successful_tracks.append(track)
@@ -239,7 +233,7 @@ async def start_playlist(playlist_id: str, user: dict, extra: dict, upload=True)
 
     for i, track in enumerate(play_meta['tracks']):
         if i > 0:
-            await asyncio.sleep(random.uniform(5, 10))
+            await asyncio.sleep(random.uniform(1.0, 2.0))
 
         success = await start_track(track['itemid'], user, track, False, playlist_folder)
         if success: successful_tracks.append(track)
