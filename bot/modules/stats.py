@@ -134,7 +134,7 @@ def generate_stats_text():
     swap_total = sizeof_fmt(swap.total) if swap.total > 0 else "Not Set"
     swap_used = sizeof_fmt(swap.used) if swap.total > 0 else "Not Set"
     
-    total, used, free = shutil.disk_usage(".")
+    total, used, free = shutil.disk_usage(Config.DOWNLOAD_BASE_DIR)
     disk_used = sizeof_fmt(used)
     disk_total = sizeof_fmt(total)
     disk_free = sizeof_fmt(free)
