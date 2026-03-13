@@ -56,7 +56,7 @@ class KkboxAPI:
         except Exception:
             return None
 
-    def api_call(self, host, path, params={}, payload=None, timeout=10):
+    def api_call(self, host, path, params={}, payload=None, timeout=60):
         if host == 'ticket':
             payload = json.dumps(payload)
 
