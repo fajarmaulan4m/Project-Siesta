@@ -363,7 +363,8 @@ async def start_genie(link: str, user: dict):
             }
             
             task_results = await run_concurrent_tasks(tasks, update_details, limit=4)
-            successful_tracks = [res for res in task_results if res]
+            # Only keep results that are actual dictionaries (metadata), ignoring Exceptions
+            successful_tracks = [res for res in task_results if isinstance(res, dict)]
 
             if not successful_tracks:
                 raise Exception("Semua lagu dalam album gagal diunduh.")
@@ -434,7 +435,8 @@ async def start_genie(link: str, user: dict):
             }
 
             task_results = await run_concurrent_tasks(tasks, update_details, limit=4)
-            successful_tracks = [res for res in task_results if res]
+            # Only keep results that are actual dictionaries (metadata), ignoring Exceptions
+            successful_tracks = [res for res in task_results if isinstance(res, dict)]
 
             if not successful_tracks:
                 raise Exception("Semua lagu dalam playlist gagal diunduh.")
