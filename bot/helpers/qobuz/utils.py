@@ -312,7 +312,10 @@ async def get_album_metadata(item_id, r_id, user: dict):
     metadata['itemid'] = item_id
     
     metadata['title'] = q_meta['title']
-    metadata['album'] = q_meta['title']
+    if q_meta.get('version'):
+        metadata['title'] += f" ({q_meta['version']})"
+        
+    metadata['album'] = metadata['title']
     metadata['albumartist'] = q_meta['artist']['name']
     metadata['artist'] = q_meta['artist']['name']
     
